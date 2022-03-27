@@ -15,7 +15,7 @@ let ambientLight: BytesVector;
 (async () => {
     await init('node_modules/@ml.wasm/linalg/linalg_bg.wasm');
     
-    lightNormal = new FloatsVector([0.0, 0.0, -10.0]);
+    lightNormal = new FloatsVector([0.0, 1.0, -1.0]);
     ambientLight = new BytesVector([50, 50, 50, 255]);
     // document.getElementById('fileinput')!.onchange = parseImage;
     
@@ -58,8 +58,8 @@ function parseImage() {
         // console.log(result.length)
         // console.log(d.width * d.height * 4)
 
-    const WIDTH = 200;
-    const HEIGHT = 200;
+    const WIDTH = 300;
+    const HEIGHT = 300;
 
     let buffer = BytesMatrix.newWithZeroes(WIDTH, HEIGHT * 4);
     let zBuffer = IntegersMatrix.newWithElement(WIDTH, HEIGHT, -1000);
@@ -68,18 +68,16 @@ function parseImage() {
     const cx = zBuffer.ncols() / 2;
     const cy = zBuffer.nrows() / 2;
 
-    const R = 75;
-    const r = 20;
+    const R = 100;
+    const r = 30;
     
     let int = Math.trunc;
 
     lightNormal = normalizeVec3(lightNormal);
+    console.log(lightNormal.toString());
     // lightNormal.divConstant(lightNormal.powf(2).sum());
 
     const rot: FloatsMatrix = xRotationMatrix(degree2rad(30)).dot(zRotationMatrix(degree2rad(30)));
-    console.log(xRotationMatrix(degree2rad(30)).toString());
-    console.log(zRotationMatrix(degree2rad(30)).toString());
-    console.log(rot.toString());
     
     for(let theta = 0.0; theta < Math.PI * 2; theta += 0.01) {
         for (let phi = 0.0; phi < Math.PI * 2; phi += 0.01) {
@@ -116,6 +114,7 @@ function parseImage() {
             
             let nPow = normal.mul(lightNormal).sum();
             nPow *= -1;
+            nPow = (nPow + 1) / 2;
 
             // If current z is greater means it is on top of previous and value can be overwritten
             if (zBuffer.get([ty, tx]) < pos.get(2)) {
