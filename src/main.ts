@@ -15,7 +15,7 @@ let color: BytesVector;
     
     lightNormal = new FloatsVector([0.0, 1.0, -1.0]);
     ambientLight = new BytesVector([50, 50, 50, 255]);
-    color = new BytesVector([255, 0, 0, 255]);
+    color = new BytesVector([255, 255, 0, 255]);
 
     parseImage()
 })();
